@@ -31,21 +31,7 @@ const CRYPTO_ASSETS = [
   { symbol: 'UNI', name: 'Uniswap', id: 'uniswap' },
 ];
 
-/**
- * Fetch all cryptocurrency rates in a SINGLE batch API call using CoinGecko
- * 
- * OPTIMIZATION:
- * - Before: 12 separate API calls to Coinbase (one per crypto) = 1-2 seconds
- * - After: 1 batch API call to CoinGecko (all at once) = 300-500ms
- * - Result: 3-4x faster! And no authentication needed
- * 
- * Advantages over Coinbase API v2:
- * ✅ Single batch call for all currencies
- * ✅ No authentication required
- * ✅ Free tier with generous rate limits (50 calls/min)
- * ✅ Includes market cap, volume, and more data
- * ✅ More reliable for production use
- */
+
 export async function fetchCryptoRates(): Promise<CryptoRate[]> {
   try {
     // Build comma-separated list of crypto IDs for batch request
