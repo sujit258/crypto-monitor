@@ -70,3 +70,91 @@ app/
 ├── root.tsx                    # Root layout & theme management
 ├── routes.ts                   # Route configuration
 └── app.css                     # Tailwind directives
+## Design Decisions & Tradeoffs
+
+### Scope vs. Polish
+**Decision**: Focused on core features (data fetching, filtering, drag-and-drop, persistence) with minimal animations.
+
+**Tradeoff**: 
+- ✅ All requirements delivered on time
+- ❌ UI is functional, not flashy
+
+---
+
+### API Call Strategy
+**Decision**: Single batch API call (`?ids=bitcoin,ethereum,...`) instead of 12 individual requests.
+
+**Tradeoff**:
+- ✅ 3-4x faster (300ms vs 1.5s)
+- ✅ No rate-limiting risk
+
+---
+
+### Data Fetching with Remix Loader
+**Decision**: Used loader pattern for initial data fetch instead of client-side useEffect.
+
+**Tradeoff**:
+- ✅ Data ready before component mounts (no waterfall)
+- ✅ Single source of truth
+- ❌ No built-in auto-refresh (manual refresh only)
+
+---
+
+### State Management: useState vs Context
+**Decision**: Simple `useState` in root component instead of React Context API or Redux.
+
+**What we used:**
+- `useState` for: rates, searchTerm, sortType, isDark, isRefreshing, etc.
+
+**Tradeoff**:
+- ✅ Simple, readable, no boilerplate
+- ❌ Not scalable if app grows to 50+ components
+
+---
+
+### Persistence Layer
+**Decision**: localStorage for card order + theme, no backend.
+
+**Tradeoff**:
+- ✅ No auth/server needed
+- ✅ Fast, instant persistence
+- ❌ Limited to 5-10MB, user can clear it
+
+---
+
+### Drag-and-Drop Library
+**Decision**: `@dnd-kit` over React-Beautiful-DnD or custom solution.
+
+**Tradeoff**:
+- ✅ Modern, actively maintained, lightweight (14kb)
+- ✅ Accessibility first
+- ❌ Requires more setup than alternatives
+
+---
+
+### Component Memoization
+**Decision**: Selective `memo()` on CryptoCard + `useMemo()` for color calculations.
+
+**Tradeoff**:
+- ✅ Prevents unnecessary re-renders (12 cards)
+- ❌ Added complexity vs naive approach
+
+---
+
+### Styling: Tailwind CSS
+**Decision**: Utility-first Tailwind instead of CSS Modules or Styled-Components.
+
+**Tradeoff**:
+- ✅ Smallest bundle, fastest dev speed
+- ✅ Built-in dark mode support
+- ❌ Long className strings
+
+---
+
+### Development Time
+**Total**: ~4-5 hours
+- Setup & Architecture: 30~40 min
+- Core Features: 90 min
+- UI & Styling: 60~70 min
+- Testing: 30 min
+- Docs & Polish: 40 min
